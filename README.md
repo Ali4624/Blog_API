@@ -1,231 +1,228 @@
-# 📝 Blog Platform API
+# 🌟 Lumina Blog Platform & RESTful API
 
-> A fully-featured RESTful Blog Platform API built with Django, Django REST Framework, and MySQL — supporting authentication, posts, comments, likes, bookmarks, tags, categories, and search.
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-3776AB.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![SQLAlchemy 2.0](https://img.shields.io/badge/SQLAlchemy-2.0-D71F00?style=for-the-badge&logo=sqlalchemy&logoColor=white)](https://www.sqlalchemy.org/)
+[![Pydantic v2](https://img.shields.io/badge/Pydantic-v2-E92063?style=for-the-badge&logo=pydantic&logoColor=white)](https://docs.pydantic.dev/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
----
-
-## 🚀 Features
-
-- **Authentication** — Register, login, and JWT-based token refresh
-- **User Profiles** — Public profiles with bio, avatar, and website
-- **Posts** — Full CRUD with slug-based URLs, draft/publish status
-- **Comments** — Nested comments (reply to comments) per post
-- **Likes & Bookmarks** — Toggle like or bookmark any post
-- **Tags & Categories** — Organize and filter posts by tag or category
-- **Search & Filtering** — Search by keyword, filter by tag/category, order by date
-- **Permissions** — Only authors can edit or delete their own content
+A modern, high-performance **Full-Stack Blog Platform & REST API**. Powered by **FastAPI**, **SQLAlchemy 2.0**, **Pydantic v2**, and **MySQL/SQLite** on the backend, paired with **Lumina** — a sleek, responsive **Glassmorphism web interface** on the frontend.
 
 ---
 
-## 🛠️ Tech Stack
+## ✨ Key Highlights
 
-| Layer | Technology |
-|---|---|
-| Language | Python 3.11+ |
-| Framework | Django 5.x |
-| API | Django REST Framework |
-| Auth | JWT (`djangorestframework-simplejwt`) |
-| Database | MySQL 8.4 |
-| Environment | `python-decouple` |
+- ⚡ **High-Performance Async Backend**: Built with FastAPI & Uvicorn for asynchronous I/O and near-instant response times.
+- 🎨 **Lumina Glassmorphic UI**: Ambient light orbs, backdrop blur, smooth micro-interactions, responsive layout, and zero dependencies.
+- 🔐 **Secure Authentication**: OAuth2 password flow with JWT bearer tokens (`python-jose`) and salted bcrypt password hashing (`passlib`).
+- 📝 **Full Article & Content Management**: Posts with slug-based URLs, published/draft statuses, category filtering, and tag management.
+- 💬 **Hierarchical Interactions**: Multi-tier nested comments, like toggling, post bookmarking, and live engagement metrics.
+- 🔍 **Real-Time Search & Filters**: Search across titles, content, categories, and tags with keyboard shortcut (`/`) focus.
+- 📚 **Self-Documenting API**: Live interactive Swagger UI (`/docs`) and ReDoc (`/redoc`) generated automatically from Pydantic schemas.
+- 🛡️ **Dual-Mode Frontend**: Seamlessly operates with the live FastAPI backend or automatically activates realistic mock data for zero-config visual previewing.
 
 ---
 
-## 📁 Project Structure
+## 🏗️ System Architecture
 
-```
-blog_api/
-├── blog_api/            # Core project configuration
-│   ├── settings.py
-│   ├── urls.py
-│   └── wsgi.py
-├── users/               # Auth & user profile app
-├── posts/               # Posts, categories & tags app
-├── interactions/        # Comments, likes & bookmarks app
-├── .env                 # Environment variables (not committed)
-├── requirements.txt
-└── manage.py
+```mermaid
+graph TD
+    Client["Client Browser (Lumina Frontend)"]
+    API["FastAPI Application (Uvicorn ASGI)"]
+    Auth["JWT & OAuth2 Security"]
+    Router["API v1 Routers (/auth, /posts, /users, /interactions)"]
+    ORM["SQLAlchemy 2.0 ORM"]
+    DB[("Database: SQLite / MySQL")]
+
+    Client -->|HTTP / JSON| API
+    API --> Auth
+    API --> Router
+    Router --> ORM
+    ORM --> DB
 ```
 
 ---
 
-## ⚙️ Installation & Setup
+## 📁 Repository Structure
 
-### 1. Clone the repository
+```
+Blog_API/
+├── app/
+│   ├── api/
+│   │   ├── deps.py              # FastAPI dependencies (get_db, get_current_user)
+│   │   └── v1/
+│   │       ├── api.py           # Master router aggregator
+│   │       └── endpoints/
+│   │           ├── auth.py      # Registration, login, token refresh
+│   │           ├── users.py     # User profiles & settings
+│   │           ├── posts.py     # Post CRUD, category & tag filters
+│   │           └── interactions.py # Comments, likes, bookmarks
+│   ├── core/
+│   │   ├── config.py            # Pydantic BaseSettings & env loader
+│   │   └── security.py          # Password hashing (bcrypt) & JWT helpers
+│   ├── db/
+│   │   ├── base.py              # Declarative Base metadata
+│   │   └── session.py           # SQLAlchemy Engine & SessionLocal maker
+│   ├── models/                  # SQLAlchemy ORM models
+│   │   ├── user.py              # User entity
+│   │   ├── post.py              # Post, Category, Tag entities
+│   │   └── interaction.py       # Comment, Like, Bookmark entities
+│   ├── schemas/                 # Pydantic v2 schemas for validation
+│   │   ├── user.py
+│   │   ├── post.py
+│   │   └── interaction.py
+│   └── main.py                  # FastAPI app factory, CORS, & healthcheck
+├── frontend/                    # Lumina Glassmorphism Web App
+│   ├── index.html               # Semantic HTML5 layout & modal overlays
+│   ├── style.css                # Glassmorphism design tokens & responsive CSS
+│   └── app.js                   # Client state, animations, & API bridge
+├── tests/                       # Pytest test suite
+│   ├── conftest.py              # Test fixtures & SQLite in-memory DB
+│   └── ...                      # Unit & integration tests
+├── .env.example                 # Environment variables blueprint
+├── .gitignore                   # Ignored files (venv, env, pycache)
+├── requirements.txt             # Python dependencies
+└── README.md                    # Project documentation
+```
 
+---
+
+## 🚀 Quick Start Guide
+
+### 1. Prerequisites
+- **Python 3.10+** installed on your system.
+- *(Optional)* MySQL 8.0+ (SQLite works out-of-the-box with zero configuration).
+
+### 2. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/blog-platform-api.git
-cd blog-platform-api
+git clone https://github.com/Ali4624/Blog_API.git
+cd Blog_API
 ```
 
-### 2. Create and activate a virtual environment
-
+### 3. Set Up Virtual Environment
 ```bash
+# Windows (PowerShell)
 python -m venv venv
-source venv/bin/activate        # On Windows: venv\Scripts\activate
+.\venv\Scripts\Activate.ps1
+
+# Linux / macOS
+python3 -m venv venv
+source venv/bin/activate
 ```
 
-### 3. Install dependencies
-
+### 4. Install Dependencies
 ```bash
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 4. Configure environment variables
+### 5. Configure Environment Variables
+Copy the template `.env.example` to `.env`:
+```bash
+# Windows
+copy .env.example .env
 
-Create a `.env` file in the root directory:
+# Linux / macOS
+cp .env.example .env
+```
 
+Default configuration in `.env`:
 ```env
-SECRET_KEY=your-secret-key-here
-DEBUG=True
+# App Settings
+PROJECT_NAME="Blog Platform API"
+API_V1_STR="/api/v1"
+SECRET_KEY="change-this-to-a-super-secret-key-in-production"
+ACCESS_TOKEN_EXPIRE_MINUTES=11520 # 8 days
 
-DB_NAME=blog_db
-DB_USER=your_mysql_user
-DB_PASSWORD=your_mysql_password
-DB_HOST=localhost
-DB_PORT=3306
+# Database: SQLite (default zero-setup)
+DATABASE_URL="sqlite:///./blog.db"
+
+# Or MySQL:
+# DATABASE_URL="mysql+pymysql://root:password@localhost:3306/blog_db"
 ```
 
-### 5. Set up the MySQL database
-
-```sql
-CREATE DATABASE blog_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+### 6. Run the FastAPI Backend
+```bash
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
+- API Health Check: [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
+- Interactive Swagger UI: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- Alternative ReDoc: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
 
-### 6. Run migrations
+### 7. Launch the Lumina Frontend
+Simply open `frontend/index.html` in your web browser:
+- On Windows: Double-click `frontend/index.html` or run:
+  ```powershell
+  start frontend/index.html
+  ```
+- Or serve it using Python's static server:
+  ```bash
+  python -m http.server 3000 --directory frontend
+  ```
+  Visit [http://localhost:3000](http://localhost:3000).
+
+---
+
+## 📖 API Endpoints Overview
+
+### Authentication (`/api/v1/auth`)
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|:---:|
+| `POST` | `/api/v1/auth/register` | Register a new user account | ❌ |
+| `POST` | `/api/v1/auth/login` | Login with username/password, returns JWT | ❌ |
+
+### Users & Profiles (`/api/v1/users`)
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|:---:|
+| `GET` | `/api/v1/users/me` | Fetch currently authenticated user | ✅ |
+| `PUT` | `/api/v1/users/me` | Update bio, avatar, and social links | ✅ |
+| `GET` | `/api/v1/users/{username}` | Fetch public author profile | ❌ |
+
+### Articles & Posts (`/api/v1/posts`)
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|:---:|
+| `GET` | `/api/v1/posts/` | List posts (filters: `search`, `category`, `tag`, pagination) | ❌ |
+| `POST` | `/api/v1/posts/` | Create a new blog post | ✅ |
+| `GET` | `/api/v1/posts/{slug}` | Get single post details by slug | ❌ |
+| `PUT` | `/api/v1/posts/{slug}` | Update post content (author only) | ✅ |
+| `DELETE` | `/api/v1/posts/{slug}` | Delete post (author only) | ✅ |
+
+### Interactions (`/api/v1/posts/{slug}/...`)
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|:---:|
+| `GET` | `/api/v1/posts/{slug}/comments` | Get nested comment thread | ❌ |
+| `POST` | `/api/v1/posts/{slug}/comments` | Submit comment or reply to parent ID | ✅ |
+| `POST` | `/api/v1/posts/{slug}/like` | Toggle like status on article | ✅ |
+| `POST` | `/api/v1/posts/{slug}/bookmark` | Toggle bookmark status on article | ✅ |
+
+---
+
+## 🧪 Testing
+
+Run automated tests using `pytest`:
 
 ```bash
-python manage.py makemigrations
-python manage.py migrate
+pytest -v
 ```
 
-### 7. Create a superuser (optional)
-
+To run with coverage:
 ```bash
-python manage.py createsuperuser
-```
-
-### 8. Start the development server
-
-```bash
-python manage.py runserver
-```
-
-The API will be available at `http://127.0.0.1:8000/`
-
----
-
-## 🔗 API Endpoints
-
-### Auth
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/api/auth/register/` | Register a new user |
-| POST | `/api/auth/login/` | Login and get JWT tokens |
-| POST | `/api/auth/refresh/` | Refresh access token |
-
-### Profiles
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/profiles/{username}/` | View a user's profile |
-| PUT | `/api/profiles/{username}/` | Update your own profile |
-
-### Posts
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/posts/` | List all posts (with search & filters) |
-| POST | `/api/posts/` | Create a new post |
-| GET | `/api/posts/{slug}/` | Get a single post |
-| PUT | `/api/posts/{slug}/` | Update a post (author only) |
-| DELETE | `/api/posts/{slug}/` | Delete a post (author only) |
-
-### Comments
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/posts/{slug}/comments/` | List comments on a post |
-| POST | `/api/posts/{slug}/comments/` | Add a comment |
-| DELETE | `/api/comments/{id}/` | Delete a comment (author only) |
-
-### Likes & Bookmarks
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/api/posts/{slug}/like/` | Toggle like on a post |
-| POST | `/api/posts/{slug}/bookmark/` | Toggle bookmark on a post |
-
-### Tags & Categories
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/tags/` | List all tags |
-| GET | `/api/categories/` | List all categories |
-
-### Search & Filtering
-```
-GET /api/posts/?search=django
-GET /api/posts/?tag=python
-GET /api/posts/?category=tech
-GET /api/posts/?ordering=-created_at
+pytest --cov=app tests/
 ```
 
 ---
 
-## 🗄️ Database Models
+## 🤝 Contributing
 
-### Users App
-- **User** — Extends Django's `AbstractUser`
-- **Profile** — One-to-one with User; stores bio, avatar, website
-
-### Posts App
-- **Category** — name, slug
-- **Tag** — name, slug
-- **Post** — title, slug, content, author, category, tags (M2M), status, timestamps
-
-### Interactions App
-- **Comment** — post, author, body, parent (self-referential for nesting)
-- **Like** — user + post (unique together)
-- **Bookmark** — user + post (unique together)
-
----
-
-## 🔐 Authentication
-
-This API uses **JWT (JSON Web Tokens)**. After logging in, include the access token in all protected requests:
-
-```
-Authorization: Bearer <your_access_token>
-```
-
-Tokens expire after a set period. Use the `/api/auth/refresh/` endpoint with your refresh token to get a new access token.
-
----
-
-## 📦 Requirements
-
-```
-Django>=5.0
-djangorestframework>=3.15
-djangorestframework-simplejwt>=5.3
-django-filter>=23.5
-mysqlclient>=2.2
-python-decouple>=3.8
-Pillow>=10.0
-```
-
----
-
-## 🧪 Running Tests
-
-```bash
-python manage.py test
-```
+Contributions, issues, and feature requests are welcome!
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'feat: Add AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ---
 
 ## 📄 License
 
-This project is open-source and available under the [MIT License](LICENSE).
-
----
-
-## 🙋 Author
-
-Built as a pet project to practice Django REST Framework, JWT authentication, and MySQL integration.  
-Feel free to fork, star ⭐, or contribute!
+Distributed under the **MIT License**. See `LICENSE` for more information.

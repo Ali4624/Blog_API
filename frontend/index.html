@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumina | Modern Glassmorphism Blog</title>
+  <meta name="description" content="A modern glassmorphism blog platform built with HTML, CSS, and FastAPI backend.">
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient Gradient Light Orbs for Glassmorphic Depth -->
+  <div class="ambient-background" aria-hidden="true">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+    <div class="glow-orb orb-4"></div>
+  </div>
+
+  <div class="app-container">
+    <!-- Glass Floating Navigation -->
+    <header class="glass-nav-wrapper">
+      <nav class="glass-nav" id="main-nav">
+        <a href="#" class="nav-brand" id="brand-logo">
+          <div class="brand-icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <span class="brand-name">Lumina<span>.blog</span></span>
+        </a>
+
+        <!-- Search Bar with Glass Input -->
+        <div class="nav-search-container">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="search-input" placeholder="Search articles, tags, authors..." autocomplete="off">
+          <kbd class="search-kbd">/</kbd>
+        </div>
+
+        <!-- Navigation Actions -->
+        <div class="nav-actions">
+          <button class="glass-btn btn-ghost" id="open-auth-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span id="auth-btn-text">Sign In</span>
+          </button>
+          
+          <button class="glass-btn btn-primary" id="open-create-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Write Post</span>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="glass-card hero-card" id="featured-hero">
+          <div class="hero-badge">
+            <span class="pulse-dot"></span> Featured Story
+          </div>
+          <h1 class="hero-title" id="featured-title">Architecting High-Throughput REST APIs with FastAPI & PostgreSQL</h1>
+          <p class="hero-description" id="featured-desc">
+            Explore battle-tested patterns for asynchronous database sessions, dependency injection, and clean layered architecture designed for modern cloud-native systems.
+          </p>
+          <div class="hero-meta">
+            <div class="author-chip">
+              <div class="avatar-ring">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="Sarah Chen" class="author-img">
+              </div>
+              <div class="author-info">
+                <span class="author-name">Sarah Chen</span>
+                <span class="author-role">Backend Architect</span>
+              </div>
+            </div>
+            <div class="meta-divider"></div>
+            <div class="read-stats">
+              <span>Oct 14, 2026</span>
+              <span class="dot">•</span>
+              <span>7 min read</span>
+            </div>
+            <button class="glass-btn btn-sm btn-glow read-featured-btn" id="read-featured-btn">
+              Read Article
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Category Navigation Pills -->
+      <section class="categories-bar">
+        <div class="category-scroll" id="categories-list">
+          <button class="category-pill active" data-category="all">All Topics</button>
+          <button class="category-pill" data-category="fastapi">FastAPI</button>
+          <button class="category-pill" data-category="postgresql">PostgreSQL</button>
+          <button class="category-pill" data-category="python">Python</button>
+          <button class="category-pill" data-category="architecture">Architecture</button>
+          <button class="category-pill" data-category="frontend">Frontend & UI</button>
+          <button class="category-pill" data-category="devops">DevOps</button>
+        </div>
+      </section>
+
+      <!-- Posts Feed Header -->
+      <div class="feed-header">
+        <div class="feed-title-wrap">
+          <h2 class="section-title">Latest Articles</h2>
+          <span class="posts-counter" id="posts-count">Showing 6 articles</span>
+        </div>
+        <div class="backend-status-badge" id="api-status-badge">
+          <span class="status-indicator live"></span>
+          <span class="status-text" id="status-text">Client Preview Mode</span>
+        </div>
+      </div>
+
+      <!-- Articles Grid -->
+      <section class="articles-grid" id="articles-grid">
+        <!-- Cards injected dynamically via app.js -->
+      </section>
+    </main>
+
+    <!-- Glass Footer -->
+    <footer class="glass-footer">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <div class="brand-icon-box sm">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <span>Lumina Blog Platform</span>
+        </div>
+        <p class="footer-text">Crafted with modern HTML5, Glassmorphism CSS, and prepared for FastAPI & PostgreSQL.</p>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Documentation</a>
+          <a href="#" class="footer-link">Swagger /docs</a>
+          <a href="#" class="footer-link">GitHub</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- MODAL: Full Article Reader View -->
+  <div class="glass-modal-backdrop" id="reader-modal">
+    <div class="glass-modal reader-modal-container">
+      <button class="close-modal-btn" id="close-reader-btn" aria-label="Close reader">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Progress bar -->
+      <div class="reader-progress-bar" id="reader-progress"></div>
+
+      <div class="reader-header">
+        <div class="reader-tag-wrap" id="reader-categories">
+          <span class="article-tag">FastAPI</span>
+        </div>
+        <h1 class="reader-title" id="reader-title">Article Title</h1>
+        
+        <div class="reader-author-bar">
+          <img src="" alt="" class="author-img lg" id="reader-author-avatar">
+          <div>
+            <div class="author-name" id="reader-author-name">Author Name</div>
+            <div class="read-stats">
+              <span id="reader-date">Date</span>
+              <span class="dot">•</span>
+              <span id="reader-readtime">5 min read</span>
+            </div>
+          </div>
+          <div class="reader-actions">
+            <button class="icon-action-btn" id="reader-like-btn" title="Like post">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+              <span id="reader-like-count">42</span>
+            </button>
+            <button class="icon-action-btn" id="reader-bookmark-btn" title="Bookmark">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="reader-hero-image" id="reader-hero-img-wrap">
+        <img src="" alt="" id="reader-cover-img">
+      </div>
+
+      <!-- Article Rich Text Body -->
+      <article class="reader-body" id="reader-body">
+        <!-- Injected dynamically -->
+      </article>
+
+      <!-- Comments Section -->
+      <section class="reader-comments-section">
+        <h3 class="comments-title">Discussion (<span id="comments-count">2</span>)</h3>
+        
+        <div class="new-comment-form">
+          <textarea id="new-comment-input" placeholder="Share your insights on this article..." rows="3"></textarea>
+          <div class="comment-submit-bar">
+            <button class="glass-btn btn-sm btn-primary" id="submit-comment-btn">Comment</button>
+          </div>
+        </div>
+
+        <div class="comments-list" id="comments-list">
+          <!-- Comments rendered here -->
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- MODAL: Write New Article -->
+  <div class="glass-modal-backdrop" id="create-modal">
+    <div class="glass-modal form-modal-container">
+      <button class="close-modal-btn" id="close-create-btn" aria-label="Close write modal">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="modal-header">
+        <div class="brand-icon-box sm">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-title">Publish New Story</h2>
+          <p class="modal-sub">Draft and publish your article to the Lumina platform</p>
+        </div>
+      </div>
+
+      <form id="create-post-form" class="glass-form">
+        <div class="form-group">
+          <label for="post-title">Article Title</label>
+          <input type="text" id="post-title" required placeholder="e.g. Master Clean Architecture in Python" class="glass-input">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="post-category">Category</label>
+            <select id="post-category" class="glass-input glass-select">
+              <option value="fastapi">FastAPI</option>
+              <option value="postgresql">PostgreSQL</option>
+              <option value="python">Python</option>
+              <option value="architecture">Architecture</option>
+              <option value="frontend">Frontend & UI</option>
+              <option value="devops">DevOps</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="post-tags">Tags (comma-separated)</label>
+            <input type="text" id="post-tags" placeholder="api, async, tutorial" class="glass-input">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="post-cover">Cover Image URL (optional)</label>
+          <input type="url" id="post-cover" placeholder="https://images.unsplash.com/..." class="glass-input">
+        </div>
+
+        <div class="form-group">
+          <label for="post-summary">Short Excerpt / Summary</label>
+          <input type="text" id="post-summary" required placeholder="A brief hook explaining the post in 1-2 sentences..." class="glass-input">
+        </div>
+
+        <div class="form-group">
+          <label for="post-content">Story Content (Supports Markdown & HTML)</label>
+          <textarea id="post-content" required rows="8" placeholder="Write your full story here..." class="glass-input glass-textarea"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="glass-btn btn-ghost" id="cancel-create-btn">Cancel</button>
+          <button type="submit" class="glass-btn btn-primary btn-glow">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+            Publish Article
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Authentication (Login / Register) -->
+  <div class="glass-modal-backdrop" id="auth-modal">
+    <div class="glass-modal auth-modal-container">
+      <button class="close-modal-btn" id="close-auth-btn" aria-label="Close auth modal">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="auth-tabs">
+        <button class="auth-tab-btn active" id="tab-login" data-tab="login">Sign In</button>
+        <button class="auth-tab-btn" id="tab-register" data-tab="register">Create Account</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="login-form" class="glass-form auth-form-panel">
+        <div class="form-group">
+          <label for="login-email">Email or Username</label>
+          <input type="text" id="login-email" required placeholder="alex@example.com" class="glass-input">
+        </div>
+
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" required placeholder="••••••••" class="glass-input">
+        </div>
+
+        <button type="submit" class="glass-btn btn-primary btn-full btn-glow">Sign In</button>
+        
+        <p class="auth-hint">Ready to hook up to your FastAPI <code>/api/v1/auth/login</code> endpoint</p>
+      </form>
+
+      <!-- Register Form -->
+      <form id="register-form" class="glass-form auth-form-panel" style="display: none;">
+        <div class="form-group">
+          <label for="reg-username">Username</label>
+          <input type="text" id="reg-username" required placeholder="alibek_dev" class="glass-input">
+        </div>
+
+        <div class="form-group">
+          <label for="reg-email">Email</label>
+          <input type="email" id="reg-email" required placeholder="alibek@example.com" class="glass-input">
+        </div>
+
+        <div class="form-group">
+          <label for="reg-password">Password</label>
+          <input type="password" id="reg-password" required placeholder="••••••••" class="glass-input">
+        </div>
+
+        <button type="submit" class="glass-btn btn-primary btn-full btn-glow">Create Account</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
