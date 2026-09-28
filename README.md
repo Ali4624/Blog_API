@@ -2,24 +2,26 @@
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-3776AB.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![SQLAlchemy 2.0](https://img.shields.io/badge/SQLAlchemy-2.0-D71F00?style=for-the-badge&logo=sqlalchemy&logoColor=white)](https://www.sqlalchemy.org/)
 [![Pydantic v2](https://img.shields.io/badge/Pydantic-v2-E92063?style=for-the-badge&logo=pydantic&logoColor=white)](https://docs.pydantic.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-A modern, high-performance **Full-Stack Blog Platform & REST API**. Powered by **FastAPI**, **SQLAlchemy 2.0**, **Pydantic v2**, and **MySQL/SQLite** on the backend, paired with **Lumina** — a sleek, responsive **Glassmorphism web interface** on the frontend.
+A modern, high-performance **Full-Stack Blog Platform & REST API**. Powered by **FastAPI**, **SQLAlchemy 2.0**, **PostgreSQL**, and **Pydantic v2** on the backend, paired with **Lumina** — a sleek, responsive **Glassmorphism web interface** on the frontend.
 
 ---
 
 ## ✨ Key Highlights
 
-- ⚡ **High-Performance Async Backend**: Built with FastAPI & Uvicorn for asynchronous I/O and near-instant response times.
-- 🎨 **Lumina Glassmorphic UI**: Ambient light orbs, backdrop blur, smooth micro-interactions, responsive layout, and zero dependencies.
+- ⚡ **High-Throughput Async Backend**: Built with FastAPI & Uvicorn for asynchronous I/O and near-instant response times.
+- 🐘 **Enterprise PostgreSQL & SQLAlchemy 2.0**: Robust relational data persistence with connection pooling, declarative models, and Alembic migrations.
+- 🎨 **Lumina Glassmorphic UI**: Ambient light orbs, backdrop blur, smooth micro-interactions, responsive layout, and zero external JS frameworks required.
 - 🔐 **Secure Authentication**: OAuth2 password flow with JWT bearer tokens (`python-jose`) and salted bcrypt password hashing (`passlib`).
 - 📝 **Full Article & Content Management**: Posts with slug-based URLs, published/draft statuses, category filtering, and tag management.
 - 💬 **Hierarchical Interactions**: Multi-tier nested comments, like toggling, post bookmarking, and live engagement metrics.
 - 🔍 **Real-Time Search & Filters**: Search across titles, content, categories, and tags with keyboard shortcut (`/`) focus.
 - 📚 **Self-Documenting API**: Live interactive Swagger UI (`/docs`) and ReDoc (`/redoc`) generated automatically from Pydantic schemas.
-- 🛡️ **Dual-Mode Frontend**: Seamlessly operates with the live FastAPI backend or automatically activates realistic mock data for zero-config visual previewing.
+- 🛡️ **Dual-Mode Frontend**: Seamlessly connects to the live FastAPI backend with automatic graceful mock fallback for zero-config visual previewing.
 
 ---
 
@@ -32,7 +34,7 @@ graph TD
     Auth["JWT & OAuth2 Security"]
     Router["API v1 Routers (/auth, /posts, /users, /interactions)"]
     ORM["SQLAlchemy 2.0 ORM"]
-    DB[("Database: SQLite / MySQL")]
+    DB[("PostgreSQL Database (psycopg2 / asyncpg)")]
 
     Client -->|HTTP / JSON| API
     API --> Auth
@@ -62,7 +64,7 @@ Blog_API/
 │   │   └── security.py          # Password hashing (bcrypt) & JWT helpers
 │   ├── db/
 │   │   ├── base.py              # Declarative Base metadata
-│   │   └── session.py           # SQLAlchemy Engine & SessionLocal maker
+│   │   └── session.py           # PostgreSQL Engine & SessionLocal maker
 │   ├── models/                  # SQLAlchemy ORM models
 │   │   ├── user.py              # User entity
 │   │   ├── post.py              # Post, Category, Tag entities
@@ -77,11 +79,11 @@ Blog_API/
 │   ├── style.css                # Glassmorphism design tokens & responsive CSS
 │   └── app.js                   # Client state, animations, & API bridge
 ├── tests/                       # Pytest test suite
-│   ├── conftest.py              # Test fixtures & SQLite in-memory DB
+│   ├── conftest.py              # Test fixtures & test DB setup
 │   └── ...                      # Unit & integration tests
 ├── .env.example                 # Environment variables blueprint
 ├── .gitignore                   # Ignored files (venv, env, pycache)
-├── requirements.txt             # Python dependencies
+├── requirements.txt             # Python dependencies (FastAPI, SQLAlchemy, psycopg2/asyncpg)
 └── README.md                    # Project documentation
 ```
 
@@ -91,7 +93,7 @@ Blog_API/
 
 ### 1. Prerequisites
 - **Python 3.10+** installed on your system.
-- *(Optional)* MySQL 8.0+ (SQLite works out-of-the-box with zero configuration).
+- **PostgreSQL 14+** installed and running locally or on a cloud provider (e.g. Supabase, Neon, AWS RDS).
 
 ### 2. Clone the Repository
 ```bash
@@ -116,8 +118,13 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 5. Configure Environment Variables
-Copy the template `.env.example` to `.env`:
+### 5. Configure PostgreSQL Database & Environment Variables
+Create your PostgreSQL database (e.g. via `psql` or pgAdmin):
+```sql
+CREATE DATABASE blog_db;
+```
+
+Copy `.env.example` to `.env`:
 ```bash
 # Windows
 copy .env.example .env
@@ -126,7 +133,7 @@ copy .env.example .env
 cp .env.example .env
 ```
 
-Default configuration in `.env`:
+Configure your PostgreSQL connection string in `.env`:
 ```env
 # App Settings
 PROJECT_NAME="Blog Platform API"
@@ -134,11 +141,11 @@ API_V1_STR="/api/v1"
 SECRET_KEY="change-this-to-a-super-secret-key-in-production"
 ACCESS_TOKEN_EXPIRE_MINUTES=11520 # 8 days
 
-# Database: SQLite (default zero-setup)
-DATABASE_URL="sqlite:///./blog.db"
+# PostgreSQL Database Connection URL
+DATABASE_URL="postgresql+psycopg2://postgres:your_password@localhost:5432/blog_db"
 
-# Or MySQL:
-# DATABASE_URL="mysql+pymysql://root:password@localhost:3306/blog_db"
+# Or if utilizing asynchronous SQLAlchemy sessions:
+# DATABASE_URL="postgresql+asyncpg://postgres:your_password@localhost:5432/blog_db"
 ```
 
 ### 6. Run the FastAPI Backend
@@ -150,7 +157,7 @@ uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 - Alternative ReDoc: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
 
 ### 7. Launch the Lumina Frontend
-Simply open `frontend/index.html` in your web browser:
+Open `frontend/index.html` in your web browser:
 - On Windows: Double-click `frontend/index.html` or run:
   ```powershell
   start frontend/index.html
